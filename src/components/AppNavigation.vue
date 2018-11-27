@@ -6,7 +6,9 @@
     </v-btn>
     <v-spacer/>
     <v-toolbar-items class="hidden-sm-and-down">
-      <v-btn flat :to="{name: 'about'}">About</v-btn>
+      <v-btn flat :to="{name: 'about'}">О проекте</v-btn>
+      <v-btn flat :to="{name: 'signin'}">Войти</v-btn>
+      <v-btn flat :to="{name: 'join'}">Подключиться</v-btn>
     </v-toolbar-items>
   </v-toolbar>
 </template>

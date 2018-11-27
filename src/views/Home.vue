@@ -2,7 +2,7 @@
   <v-container fill-height fluid class="home-hero">
     <v-layout justify-center align-center column pa-5>
       <img alt="Vue logo" src="../assets/logo.png">
-      <HelloWorld msg="Welcome to Your Vue.js App"/>
+      <HelloWorld msg="Willdo will do"/>
     </v-layout>
   </v-container>
 </template>

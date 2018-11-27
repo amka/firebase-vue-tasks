@@ -1,16 +1,16 @@
 <template>
-  <v-container fill-height>
+  <v-container>
     <h1 class="display-4 font-weight-black white--text text-xs-center">{{ msg }}</h1>
   </v-container>
 </template>
 
 <script>
 export default {
-  name: "HelloWorld",
+  name: 'HelloWorld',
   props: {
     msg: String
   }
-};
+}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
