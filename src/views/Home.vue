@@ -1,8 +1,10 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+  <v-container fill-height fluid class="home-hero">
+    <v-layout justify-center align-center column pa-5>
+      <img alt="Vue logo" src="../assets/logo.png">
+      <HelloWorld msg="Welcome to Your Vue.js App"/>
+    </v-layout>
+  </v-container>
 </template>
 
 <script>
@@ -16,3 +18,13 @@ export default {
   }
 }
 </script>
+
+<style>
+.home-hero {
+  background: url("/images/christmas-wall.jpg");
+  height: 100%;
+  width: 100%;
+  max-height: 100vh;
+  background-size: cover;
+}
+</style>
