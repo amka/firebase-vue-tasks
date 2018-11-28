@@ -24,25 +24,25 @@ export default {
   props: ['absolute'],
   computed: {
     ...mapState(['messages']),
-    hasSuccessMessage() {
+    hasSuccessMessage () {
       return this.messages.success !== ''
     },
-    hasErrorMessages() {
+    hasErrorMessages () {
       return this.messages.error.length > 0
     },
-    hasValidationMessages() {
+    hasValidationMessages () {
       return this.messages.validation.length > 0
     },
-    formatedErrorMessage() {
+    formatedErrorMessage () {
       return this.messages.error.map(msg => `• ${msg}`).join('<br>')
     },
-    formatedValidationMessage() {
+    formatedValidationMessage () {
       return this.messages.validation.map(msg => `• ${msg}`).join('<br>')
     }
   },
   methods: {
     ...mapActions(['pushMessage']),
-    dismiss(type) {
+    dismiss (type) {
       let obj
       if (type === 'error') {
         obj = { type, message: [] }

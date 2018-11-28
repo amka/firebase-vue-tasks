@@ -43,28 +43,26 @@
 import { mapActions } from 'vuex'
 
 export default {
-  data() {
-    return {
-      valid: false,
-      formData: {
-        email: '',
-        password: ''
-      },
-      rules: {
-        email: [
-          v => !!v || 'E-mail is required',
-          v => /.+@.+/.test(v) || 'E-mail must be valid'
-        ],
-        password: [
-          v => !!v || 'Password is required',
-          v => v.length >= 6 || 'Password must be greater than 6 characters'
-        ]
-      }
+  data: () => ({
+    valid: false,
+    formData: {
+      email: '',
+      password: ''
+    },
+    rules: {
+      email: [
+        v => !!v || 'E-mail is required',
+        v => /.+@.+/.test(v) || 'E-mail must be valid'
+      ],
+      password: [
+        v => !!v || 'Password is required',
+        v => v.length >= 6 || 'Password must be greater than 6 characters'
+      ]
     }
-  },
+  }),
   methods: {
     ...mapActions('auth', ['userLogin']),
-    submit: function(e) {
+    submit (e) {
       if (this.$refs.form.validate()) {
         this.userLogin(this.formData)
       }

@@ -4,6 +4,11 @@
     <v-btn flat :to="{name: 'home'}" active-class="active-title">
       <v-toolbar-title>Willdo</v-toolbar-title>
     </v-btn>
+    <template v-if="isAuthenticated">
+      <v-toolbar-items>
+        <v-btn flat :to="{name: 'willdo.index'}">Буду делать</v-btn>
+      </v-toolbar-items>
+    </template>
     <v-spacer/>
     <v-toolbar-items class="hidden-sm-and-down">
       <v-btn flat :to="{name: 'about'}">О проекте</v-btn>
