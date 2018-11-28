@@ -7,14 +7,28 @@
     <v-spacer/>
     <v-toolbar-items class="hidden-sm-and-down">
       <v-btn flat :to="{name: 'about'}">О проекте</v-btn>
-      <v-btn flat :to="{name: 'signin'}">Войти</v-btn>
-      <v-btn flat :to="{name: 'join'}">Подключиться</v-btn>
+
+      <template v-if="!isAuthenticated">
+        <v-btn flat :to="{name: 'signin'}">Войти</v-btn>
+        <v-btn flat :to="{name: 'join'}">Подключиться</v-btn>
+      </template>
+      <template v-else>
+        <v-btn flat @click="userLogout">Выйти</v-btn>
+      </template>
     </v-toolbar-items>
   </v-toolbar>
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex'
+
 export default {
-  name: 'AppNavigation'
+  name: 'AppNavigation',
+  computed: {
+    ...mapState('auth', ['isAuthenticated'])
+  },
+  methods: {
+    ...mapActions('auth', ['userLogout'])
+  }
 }
 </script>

@@ -16,7 +16,7 @@ export default {
     }
   },
   actions: {
-    async userJoin ({ commit }, { email, password }) {
+    async userJoin ({ dispatch, commit }, { email, password }) {
       try {
         const user = await firebase
           .auth()
@@ -28,22 +28,26 @@ export default {
         console.error(error)
         commit('setUser', null)
         commit('setIsAuthenticated', false)
-        router.push('/')
+
+        dispatch('pushMessage', { type: 'error', message: [error.message] }, { root: true })
       }
     },
-    async userLogin ({ commit }, { email, password }) {
+    async userLogin ({ dispatch, commit }, { email, password }) {
       try {
         const user = await firebase
           .auth()
           .signInWithEmailAndPassword(email, password)
         commit('setUser', user)
         commit('setIsAuthenticated', true)
+
+        dispatch('pushMessage', { type: 'success', message: 'А вот и здравствуйте!' }, { root: true })
         router.push('/')
       } catch (error) {
         console.error(error)
         commit('setUser', null)
         commit('setIsAuthenticated', false)
-        router.push('/')
+
+        dispatch('pushMessage', { type: 'error', message: [error.message] }, { root: true })
       }
     },
     async userLogout ({ commit }) {

@@ -5,7 +5,7 @@ import ru from 'vuetify/es5/locale/ru'
 
 Vue.use(Vuetify, {
   theme: {
-    primary: '#2b331c',
+    primary: '#636e55',
     secondary: '#992114',
     accent: '#C5A436',
     error: '#FF5252',

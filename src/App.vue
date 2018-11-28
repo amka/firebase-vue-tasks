@@ -4,6 +4,7 @@
       <router-link to="/">Home</router-link> |
       <router-link to="/about">About</router-link>
     </div>-->
+    <alert-bar />
     <app-navigation/>
     <v-content transition="slide-x-transition">
       <router-view/>
@@ -12,11 +13,13 @@
 </template>
 
 <script>
+import AlertBar from '@/components/AlertBar.vue'
 import AppNavigation from '@/components/AppNavigation.vue'
 
 export default {
   name: 'App',
   components: {
+    AlertBar,
     AppNavigation
   }
 }

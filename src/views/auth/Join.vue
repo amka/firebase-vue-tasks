@@ -21,7 +21,7 @@
                     </v-card-text>
                     <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn color="primary" :disabled="!valid" @click="submit">Подключиться</v-btn>
+                        <v-btn depressed color="primary" :disabled="!valid" @click="submit">Подключиться</v-btn>
                     </v-card-actions>
                 </v-card>
             </v-flex>
