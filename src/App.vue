@@ -47,4 +47,11 @@ export default {
   background: url("/images/christmas-wall.jpg") no-repeat top center;
   background-size: cover;
 }
+
+.fullwidth-mobile {
+  @media (max-width: 599px) {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
 </style>

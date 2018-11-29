@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/Home.vue'
-import store from '@/store'
+import firebase from 'firebase/app'
 
 Vue.use(Router)
 
@@ -45,7 +45,7 @@ const router = new Router({
 
 router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.authRequired)) {
-    if (!store.state.auth.user) {
+    if (!firebase.auth().currentUser) {
       next({
         path: '/signin'
       })

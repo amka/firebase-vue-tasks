@@ -1,5 +1,5 @@
 <template>
-  <v-toolbar flat color="primary" dark>
+  <v-toolbar flat color="primary" dark scroll-off-screen scroll-target="#scroll-out">
     <!-- <v-toolbar-side-icon class="hidden-md-and-up"></v-toolbar-side-icon> -->
     <v-btn flat :to="{name: 'home'}" active-class="active-title">
       <v-toolbar-title>Willdo</v-toolbar-title>
@@ -25,12 +25,12 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'AppNavigation',
   computed: {
-    ...mapState('auth', ['isAuthenticated'])
+    ...mapGetters('auth', ['isAuthenticated'])
   },
   methods: {
     ...mapActions('auth', ['userLogout'])

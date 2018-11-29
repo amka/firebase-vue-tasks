@@ -1,3 +1,5 @@
+import firebase from 'firebase/app'
+// import firebase from 'firebase/firestore'
 import { db } from '@/firebase'
 
 export default {
@@ -18,7 +20,9 @@ export default {
       try {
         const docRef = await db.collection('todos').add({
           text,
-          done
+          done,
+          user: firebase.auth().currentUser.uid,
+          timestamp: firebase.firestore.FieldValue.serverTimestamp()
         })
         dispatch('pushMessage', { type: 'success', message: 'Заданиче добавлено с ID' + docRef.id }, { root: true })
       } catch (error) {

@@ -1,4 +1,4 @@
-import firebase from 'firebase'
+import firebase from 'firebase/app'
 import router from '@/router'
 
 export default {
@@ -63,7 +63,7 @@ export default {
   },
   getters: {
     isAuthenticated (state) {
-      return state.user !== null && state.user !== undefined
+      return state.user != null && state.user !== undefined
     }
   }
 }

@@ -1,14 +1,14 @@
 <template>
-  <v-container fill-height fluid class="christmas">
-    <v-container align-content-start justify-content-start >
+  <v-container fill-height fluid class="christmas fullwidth-mobile">
+    <v-container class="fullwidth-mobile">
       <v-layout column text-left>
-        <v-text-field v-model="todo" label="Я буду делать…" solo @keydown.enter="create">
+        <v-text-field v-model="todo" label="Я буду делать…" solo @keydown.enter="create" class="todo-input">
           <v-fade-transition slot="append">
             <v-icon v-if="todo" @click="create">add_circle</v-icon>
           </v-fade-transition>
         </v-text-field>
 
-        <v-layout my-1 align-start>
+        <v-layout my-1 align-start style="position:sticky;top:70px">
           <strong class="mx-3 info--text text--darken-3">Remaining: {{ remainingTasks }}</strong>
           <v-divider vertical></v-divider>
           <strong class="mx-3 black--text">Completed: {{ completedTasks }}</strong>
@@ -16,22 +16,22 @@
           <v-progress-circular :value="progress" class="mr-2"></v-progress-circular>
         </v-layout>
 
-        <v-card v-if="todos.length > 0">
+        <v-card v-if="todos.length > 0" style="position:sticky;top:150px">
           <v-slide-y-transition class="py-0" group tag="v-list">
             <template v-for="(todo, i) in todos">
               <v-divider v-if="i !== 0" :key="`${i}-divider`"></v-divider>
 
               <v-list-tile :key="`${i}-${todo.data().text}`">
                 <v-list-tile-action>
-                  <v-checkbox v-model="todo.data().done" color="info darken-3">
-                    <div
-                      slot="label"
-                      :class="todo.data().done && 'grey--text' || 'text--primary'"
-                      class="ml-3"
-                      v-text="todo.data().text"
-                    ></div>
-                  </v-checkbox>
+                  <v-checkbox :value="todo.data().done" @change="toggleState(todo)" color="info darken-3" />
                 </v-list-tile-action>
+
+                <v-list-tile-content>
+                  <v-list-tile-title
+                    :class="todo.data().done && 'grey--text' || 'text--primary'"
+                    v-html="todo.data().text">
+                  </v-list-tile-title>
+                </v-list-tile-content>
 
                 <v-spacer></v-spacer>
 
@@ -58,7 +58,7 @@ export default {
     todosUnsubscribe: null
   }),
   computed: {
-    ...mapState('todo', ['todos']),
+    ...mapState('auth', ['user']),
     completedTasks () {
       console.log(this.todos)
       return this.todos.filter(todo => todo.done).length
@@ -72,7 +72,7 @@ export default {
   },
   methods: {
     ...mapActions(['pushMessage']),
-    // ...mapActions('todo', ['addTodo', 'loadTodos']),
+    ...mapActions('todo', ['addTodo', 'loadTodos']),
     async create () {
       try {
         await this.addTodo({
@@ -83,27 +83,35 @@ export default {
         this.pushMessage({ message: 'И это тоже сделаю!', type: 'success' })
         this.todo = null
       } catch (error) {
-        this.pushMessage({ message: error.message, type: 'error' })
+        this.pushMessage({ message: [error.message], type: 'error' })
+      }
+    },
+    async toggleState (todo) {
+      console.log(todo)
+      try {
+        await todo.ref.update({ done: !todo.data().done })
+      } catch (error) {
+        this.pushMessage({ message: [error.message], type: 'error' })
       }
     }
   },
   created () {
-    this.todosUnsubscribe = db.collection('todos').onSnapshot((querySnapshot) => {
-      console.log('Data updated')
-      console.log(querySnapshot)
+    this.todosUnsubscribe = db.collection('todos')
+      .where('user', '==', this.user.uid)
+      .orderBy('timestamp', 'desc')
+      .onSnapshot((querySnapshot) => {
+        console.log('Data updated')
 
-      let _todos = []
-      querySnapshot.forEach(element => { 
-        _todos.push(element)
+        let _todos = []
+        querySnapshot.forEach(element => {
+          _todos.push(element)
+        })
+        this.todos = _todos
       })
-      this.todos = _todos
-    })
 
     if (this.todosUnsubscribe) {
       console.log('Connection established')
     }
-
-    // this.loadTodos()
   },
   destroyed () {
     if (this.todosUnsubscribe) {
@@ -115,3 +123,16 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+.todo-input {
+  position: sticky;
+  position: -webkit-sticky;
+  top: 10px;
+
+  @media (max-width: 600px) {
+    top: 0;
+  }
+}
+
+</style>
