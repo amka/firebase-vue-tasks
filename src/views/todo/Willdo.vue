@@ -17,16 +17,16 @@
         </v-text-field>
 
         <v-layout my-1 align-start style="position:sticky;top:70px">
-          <strong class="mx-3 info--text text--darken-3">Remaining: {{ remainingTasks }}</strong>
+          <strong class="mx-3 info--text text--darken-3">Remaining: {{ remainingTasks.length }}</strong>
           <v-divider vertical></v-divider>
-          <strong class="mx-3 black--text">Completed: {{ completedTasks }}</strong>
+          <strong class="mx-3 black--text">Completed: {{ completedTasks.length }}</strong>
           <v-spacer></v-spacer>
           <v-progress-circular :value="progress" class="mr-2"></v-progress-circular>
         </v-layout>
 
-        <v-card v-if="todos.length > 0" style="position:sticky;top:150px">
+        <v-card v-if="todos.length > 0" style="position:sticky;top:150px" class="elevation-0">
           <v-slide-y-transition class="py-0" group tag="v-list">
-            <template v-for="(todo, i) in todos">
+            <template v-for="(todo, i) in remainingTasks">
               <v-divider v-if="i !== 0" :key="`${i}-divider`"></v-divider>
 
               <v-list-tile :key="`${i}-${todo.data().text}`">
@@ -58,6 +58,7 @@
 <script>
 import { mapActions, mapState } from 'vuex'
 import { db } from '@/firebase'
+import { constants } from 'fs';
 
 export default {
   data: () => ({
@@ -69,14 +70,13 @@ export default {
   computed: {
     ...mapState('auth', ['user']),
     completedTasks () {
-      console.log(this.todos)
-      return this.todos.filter(todo => todo.done).length
+      return this.todos.filter(todo => todo.data().done)
     },
     progress () {
-      return (this.completedTasks / this.todos.length) * 100
+      return (this.completedTasks.length / this.todos.length) * 100
     },
     remainingTasks () {
-      return this.todos.length - this.completedTasks
+      return this.todos.filter(todo => todo.data().done == false)
     }
   },
   methods: {
@@ -114,6 +114,7 @@ export default {
         let _todos = []
         querySnapshot.forEach(element => {
           _todos.push(element)
+          console.log(element)
         })
         this.todos = _todos
         this.isLoading = false
