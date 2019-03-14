@@ -18,10 +18,10 @@ export default {
   actions: {
     async userJoin ({ dispatch, commit }, { email, password }) {
       try {
-        const user = await firebase
+        const userCredential = await firebase
           .auth()
           .createUserWithEmailAndPassword(email, password)
-        commit('setUser', user)
+        commit('setUser', userCredential.user)
         commit('setIsAuthenticated', true)
         router.push('/')
       } catch (error) {
@@ -34,10 +34,10 @@ export default {
     },
     async userLogin ({ dispatch, commit }, { email, password }) {
       try {
-        const user = await firebase
+        const userCredential = await firebase
           .auth()
           .signInWithEmailAndPassword(email, password)
-        commit('setUser', user)
+        commit('setUser', userCredential.user)
         commit('setIsAuthenticated', true)
 
         dispatch('pushMessage', { type: 'success', message: 'А вот и здравствуйте!' }, { root: true })
