@@ -21,10 +21,10 @@ export default {
 
 <style>
 .home-hero {
-  background: url("/images/christmas-wall.jpg");
+  /* background: url("/images/wheat.png") repeat; */
   height: 100%;
   width: 100%;
   max-height: 100vh;
-  background-size: cover;
+  /* background-size: cover; */
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <h1 class="display-4 font-weight-black white--text text-xs-center">{{ msg }}</h1>
+    <h1 class="display-4 font-weight-black primary--text text-xs-center">{{ msg }}</h1>
   </v-container>
 </template>
 
