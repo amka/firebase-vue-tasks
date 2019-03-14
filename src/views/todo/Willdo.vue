@@ -1,7 +1,15 @@
 <template>
-  <v-container fill-height fluid class="christmas fullwidth-mobile">
+  <v-container fill-height fluid class="fullwidth-mobile">
     <v-container class="fullwidth-mobile">
-      <v-layout column text-left>
+      <!-- Show Loading indicator while getting tasks -->
+      <v-layout v-if="isLoading" class="justify-center">
+        <v-progress-circular
+          :size="50"
+          color="primary"
+          indeterminate
+        ></v-progress-circular>
+      </v-layout>
+      <v-layout v-else column text-left>
         <v-text-field v-model="todo" label="Я буду делать…" solo @keydown.enter="create" class="todo-input">
           <v-fade-transition slot="append">
             <v-icon v-if="todo" @click="create">add_circle</v-icon>
@@ -53,6 +61,7 @@ import { db } from '@/firebase'
 
 export default {
   data: () => ({
+    isLoading: true,
     todo: '',
     todos: [],
     todosUnsubscribe: null
@@ -107,6 +116,7 @@ export default {
           _todos.push(element)
         })
         this.todos = _todos
+        this.isLoading = false
       })
 
     if (this.todosUnsubscribe) {
