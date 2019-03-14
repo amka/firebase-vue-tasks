@@ -6,7 +6,7 @@
     </v-btn>
     <template v-if="isAuthenticated">
       <v-toolbar-items>
-        <v-btn flat :to="{name: 'willdo.index'}">Буду делать</v-btn>
+        <v-btn flat :to="{name: 'willdo.index'}">Задачи</v-btn>
       </v-toolbar-items>
     </template>
     <v-spacer/>
