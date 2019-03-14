@@ -10,7 +10,10 @@
         ></v-progress-circular>
       </v-layout>
       <v-layout v-else column text-left>
-        <v-text-field v-model="todo" label="Я буду делать…" solo @keydown.enter="create" class="todo-input">
+        <v-text-field v-model="todo" label="Я буду делать…" 
+          flat solo  autofocus
+          @keydown.enter="create"
+          class="todo-input">
           <v-fade-transition slot="append">
             <v-icon v-if="todo" @click="create">add_circle</v-icon>
           </v-fade-transition>
@@ -25,30 +28,30 @@
         </v-layout>
 
         <v-card v-if="todos.length > 0" style="position:sticky;top:150px" class="elevation-0">
-          <v-slide-y-transition class="py-0" group tag="v-list">
+          <!-- <v-slide-y-transition mode="in-out" class="py-0" group tag="v-list"> -->
             <template v-for="(todo, i) in remainingTasks">
               <v-divider v-if="i !== 0" :key="`${i}-divider`"></v-divider>
 
-              <v-list-tile :key="`${i}-${todo.data().text}`">
+              <v-list-tile :key="`${i}-${todo.text}`">
                 <v-list-tile-action>
-                  <v-checkbox :value="todo.data().done" @change="toggleState(todo)" color="info darken-3" />
+                  <v-checkbox :value="todo.done" @change="toggleState(todo)" color="info darken-3" />
                 </v-list-tile-action>
 
                 <v-list-tile-content>
                   <v-list-tile-title
-                    :class="todo.data().done && 'grey--text' || 'text--primary'"
-                    v-html="todo.data().text">
+                    :class="todo.done && 'grey--text' || 'text--primary'"
+                    v-html="todo.text">
                   </v-list-tile-title>
                 </v-list-tile-content>
 
                 <v-spacer></v-spacer>
 
                 <v-scroll-x-transition>
-                  <v-icon v-if="todo.data().done" color="success">check</v-icon>
+                  <v-icon v-if="todo.done" color="success">check</v-icon>
                 </v-scroll-x-transition>
               </v-list-tile>
             </template>
-          </v-slide-y-transition>
+          <!-- </v-slide-y-transition> -->
         </v-card>
       </v-layout>
     </v-container>
@@ -63,20 +66,20 @@ import { constants } from 'fs';
 export default {
   data: () => ({
     isLoading: true,
-    todo: '',
+    todo: null,
     todos: [],
     todosUnsubscribe: null
   }),
   computed: {
     ...mapState('auth', ['user']),
     completedTasks () {
-      return this.todos.filter(todo => todo.data().done)
+      return this.todos.filter(todo => todo.done)
     },
     progress () {
       return (this.completedTasks.length / this.todos.length) * 100
     },
     remainingTasks () {
-      return this.todos.filter(todo => todo.data().done == false)
+      return this.todos.filter(todo => todo.done == false)
     }
   },
   methods: {
@@ -84,10 +87,14 @@ export default {
     ...mapActions('todo', ['addTodo', 'loadTodos']),
     async create () {
       try {
-        await this.addTodo({
+        const newTask = {
           done: false,
           text: this.todo
-        })
+        }
+        // Push todo to list for smooth animation
+        this.todos.splice(0, 0, newTask)
+        // Push to Firebase to store
+        await this.addTodo(newTask)
 
         this.pushMessage({ message: 'И это тоже сделаю!', type: 'success' })
         this.todo = null
@@ -98,7 +105,7 @@ export default {
     async toggleState (todo) {
       console.log(todo)
       try {
-        await todo.ref.update({ done: !todo.data().done })
+        await todo.ref.update({ done: !todo.done })
       } catch (error) {
         this.pushMessage({ message: [error.message], type: 'error' })
       }
@@ -111,12 +118,16 @@ export default {
       .onSnapshot((querySnapshot) => {
         console.log('Data updated')
 
-        let _todos = []
+        this.todos = []
         querySnapshot.forEach(element => {
-          _todos.push(element)
           console.log(element)
+          this.todos.push({
+            id: element.id,
+            ref: element.ref,
+            ...element.data()
+          })
         })
-        this.todos = _todos
+
         this.isLoading = false
       })
 
