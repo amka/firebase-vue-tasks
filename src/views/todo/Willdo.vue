@@ -10,7 +10,7 @@
         ></v-progress-circular>
       </v-layout>
       <v-layout v-else column text-left>
-        <v-text-field v-model="todo" label="Я буду делать…" 
+        <v-text-field v-model="todo" label="Я буду делать…"
           flat solo  autofocus
           @keydown.enter="create"
           class="todo-input">
@@ -61,14 +61,14 @@
 <script>
 import { mapActions, mapState } from 'vuex'
 import { db } from '@/firebase'
-import { constants } from 'fs';
 
 export default {
   data: () => ({
     isLoading: true,
     todo: null,
     todos: [],
-    todosUnsubscribe: null
+    todosUnsubscribe: null,
+    lastVisible: null
   }),
   computed: {
     ...mapState('auth', ['user']),
@@ -79,7 +79,7 @@ export default {
       return (this.completedTasks.length / this.todos.length) * 100
     },
     remainingTasks () {
-      return this.todos.filter(todo => todo.done == false)
+      return this.todos.filter(todo => todo.done === false)
     }
   },
   methods: {
@@ -92,7 +92,7 @@ export default {
           text: this.todo
         }
         // Push todo to list for smooth animation
-        this.todos.splice(0, 0, newTask)
+        // this.todos.splice(0, 0, newTask)
         // Push to Firebase to store
         await this.addTodo(newTask)
 
@@ -115,11 +115,11 @@ export default {
     this.todosUnsubscribe = db.collection('todos')
       .where('user', '==', this.user.uid)
       .orderBy('timestamp', 'desc')
-      .onSnapshot((querySnapshot) => {
+      .onSnapshot((querySnapshots) => {
         console.log('Data updated')
 
         this.todos = []
-        querySnapshot.forEach(element => {
+        querySnapshots.forEach(element => {
           console.log(element)
           this.todos.push({
             id: element.id,
